@@ -46,9 +46,6 @@ def date_user_friendly(date):
     user_friendly_date = day + " of " + month_name + " " + year
     return user_friendly_date
 
-
-
-date_user_friendly("2022-02-23")
 # -- Runs on file open --
 if __name__ == "__main__":
     # -- Loop, whilst error checking input -- (Could have more error checking)
