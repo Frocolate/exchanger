@@ -1,7 +1,9 @@
 # Currency Converter - Converting currencies, getting accurate prices from scraping.
 
+# Data begins 1999.
+
 # -- Imports --
-import conversion
+from conversion import convert_now, historic_convert, graph_over_time
 from search import find_currency, get_currencies
 from datetime import datetime
 
@@ -18,24 +20,24 @@ def get_date():
         except ValueError:
             print("Invalid date format. Please try again.")
 
-def date_user_friendly(date):
+def date_user_friendly(old_date):
     months = [
         "January", "February", "March", "April",
         "May", "June", "July", "August",
         "September", "October", "November", "December"]
-    day = date[8:]
-    month = date[:7]
+    day = old_date[8:]
+    month = old_date[:7]
     month = month[5:]
     month_int = int(month)
-    year = date[:4]
+    year = old_date[:4]
     month_name = months[month_int - 1]
     if (day == "11") or (day == "12") or (day == "13"):
         day_suffix = "th"
-    elif (day[1] == "1"):
+    elif day[1] == "1":
         day_suffix = "st"
-    elif (day[1] == "2"):
+    elif day[1] == "2":
         day_suffix = "nd"
-    elif (day[1] == "3"):
+    elif day[1] == "3":
         day_suffix = "rd"
     else:
         day_suffix = "th"
@@ -45,6 +47,7 @@ def date_user_friendly(date):
     day = day + day_suffix
     user_friendly_date = day + " of " + month_name + " " + year
     return user_friendly_date
+
 
 # -- Runs on file open --
 if __name__ == "__main__":
@@ -78,17 +81,19 @@ if __name__ == "__main__":
             print("invalid argument. ")
         try:
             if conversion_type == 1:
-                converted = conversion.convertNow(from_currency, to_currency, amount)
+                converted = convert_now(from_currency, to_currency, amount)
                 print(f"{amount} {from_currency} = {converted} {to_currency}")
                 finished = True
             elif conversion_type == 2:
                 date = get_date()
                 user_friendly_date = date_user_friendly(date)
-                converted = conversion.historicConvert(from_currency, to_currency, amount, date)
+                converted = historic_convert(from_currency, to_currency, amount, date)
                 print(f"{amount} {from_currency} was equal to ~{converted} {to_currency} on the {user_friendly_date}.")
                 finished = True
             elif conversion_type == 3:
-                conversion.ratesOverTime(from_currency,to_currency, amount)
+                start_date = get_date()
+                end_date = get_date()
+                graph_over_time(from_currency,to_currency, amount, start_date, end_date)
                 finished = True
 
         except ValueError:

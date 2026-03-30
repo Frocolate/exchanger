@@ -1,8 +1,11 @@
 import requests
+import matplotlib.pyplot as plt
+import numpy as np
+
 # -- All calls to API in here --
 
 # -- Exchange Rate at latest time --
-def convertNow(from_currency, to_currency, amount):
+def convert_now(from_currency, to_currency, amount):
     url = f"https://api.frankfurter.app/latest?amount={amount}&from={from_currency}&to={to_currency}"
     data = requests.get(url).json()
     converted = data["rates"][to_currency]
@@ -10,23 +13,38 @@ def convertNow(from_currency, to_currency, amount):
     #print(f"{amount} {from_currency} = {converted} {to_currency}")
 
 # -- Exchange Rate history --
-# -- Will be graphical, graph for time and price --
-def ratesOverTime(from_currency, to_currency, amount):
-    date_start = str(input("Start Year: "))
-    date_end = str(input("End Year: "))
-    date_start = f'{date_start}-01-01'
-    date_end = f'{date_end}-01-01'
+def graph_over_time(from_currency, to_currency, amount, start_date, end_date):
+    date_start = start_date
+    date_end = end_date
     url = f"https://api.frankfurter.app/{date_start}..{date_end}?from={from_currency}&to={to_currency}"
     data = requests.get(url).json()
 
-    # -- Display all values known by Frankfurter --
-    print(f"Values shown are 1 {from_currency} to X {to_currency}")
+    # -- Blank sets for points to be added --
+    x_points = []
+    y_points = []
+    seen_years = []
+
+    # -- Graphing --
     for date, value in data["rates"].items():
-        print(date, value[to_currency])
+        # -- Clean date
+        concat_date = date[:4]
+        if concat_date not in seen_years:
+            x_points.append(concat_date)
+            y_points.append(value[to_currency])
+        #print(date, value[to_currency])
+        seen_years.append(concat_date)
+    x_graph = np.array(x_points)
+    y_graph = np.array(y_points)
+    plt.xticks(rotation=315)
+    plt.plot(x_graph,y_graph)
+    plt.xlabel("Year")
+    plt.ylabel(f"Exchange Rate ({from_currency} > {to_currency})")
+    plt.show()
+
 
 # -- Will be Historical Exchange Rate
 # -- One value, say GBP to USD on 01-01-1960
-def historicConvert(from_currency, to_currency, amount, date):
+def historic_convert(from_currency, to_currency, amount, date):
     try:
         url = f"https://api.frankfurter.app/{date}"
 

@@ -1,7 +1,57 @@
 # -- IMPORTS --
 import requests
 
+# -- Short list of keywords for things that arent pulled from frankfurter
+keywords = {
+    "great": "GBP",
+    "britain": "GBP",
+    "uk": "GBP",
+    "england": "GBP",
+    "quid": "GBP",
+    "sterling": "GBP",
+
+    "america": "USD",
+    "usa": "USD",
+    "us": "USD",
+    "buck": "USD",
+
+    "europe": "EUR",
+    "euro": "EUR",
+
+    "australia": "AUD",
+    "aus": "AUD",
+
+    "canada": "CAD",
+    "loon": "CAD",
+
+    "turky": "TRY",
+
+    "japan": "JPY",
+
+    "crown": "CZK",
+    "kron": "CZK",
+
+    "crown": "DKK",
+    "kron": "DKK",
+
+    "crown": "NOK",
+    "kron": "NOK",
+
+    "zlot": "PLN",
+
+    "kiwi": "NZD",
+
+    "china": "CNY",
+
+    "india": "INR",
+
+    "south africa": "ZAR"
+}
+
 currenciesListURL = "https://api.frankfurter.app/currencies"
+
+
+
 
 def get_currencies():
     return requests.get(currenciesListURL).json()
@@ -13,6 +63,12 @@ def find_currency(user_input, currencies, allow_retry = True):
     matches = \
         [(code, name) for code, name in currencies.items()
         if user_input in name.lower()]
+
+    for keyword, code in keywords.items():
+        if keyword in user_input:
+            keyword_add = (code, currencies[code])
+            if keyword_add not in matches:
+                matches.append(keyword_add)
 
     # -- Match by code --
     if user_input.upper() in currencies:
