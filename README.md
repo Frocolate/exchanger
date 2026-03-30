@@ -1,21 +1,25 @@
 # exchanger
-Exchange Rate Calculator
+Currency Exchange Rate CLI Tool
 
-Python CLI tool that converts currencies using live exchange rates.
+Python based CLI app for converting currencies using live exchange rates from Frankfurter API
 
-# V1.0 (Current)
+# V2.0 (Current)
+
+- Convert currencies using API with realtime exchange rates
+- Historical exchange rates
+- Exchange rate trends over time
+- Smart currency search
+- Input validation
+- More user friendly
+
+# V1.0 
 
 - Web scraping from XE.com
 - Searching for currencies by name
 - CLI-based
 
-# Limitations
+# Next Version (V3.0)
 
-- Scraping is HTML only, based on web structure
-- May break if HTML is changed on XE
-
-# Next Version
-
-- Replace scraping with exchange rate API
-- Improve searching
-- Add GUI or web interface
+- GUI
+- Proper graphing
+- Further code cleanup
