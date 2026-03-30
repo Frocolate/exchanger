@@ -1,0 +1,53 @@
+# -- IMPORTS --
+import requests
+
+currenciesListURL = "https://api.frankfurter.app/currencies"
+
+def get_currencies():
+    return requests.get(currenciesListURL).json()
+
+def find_currency(user_input, currencies, allow_retry = True):
+    user_input = user_input.strip().lower()
+
+    # -- Match by name --
+    matches = \
+        [(code, name) for code, name in currencies.items()
+        if user_input in name.lower()]
+
+    # -- Match by code --
+    if user_input.upper() in currencies:
+        code = user_input.upper()
+        print(f"{currencies[code]}, Code {code}")
+        return code
+
+    # -- What runs if matches --
+    if matches:
+        # -- Runs if multiple matches --
+        if (len(matches) > 1):
+            for i in range(len(matches)):
+                code, name = matches[i]
+                print(f"{name}, Code {code}")
+            final_code = input("Multiple matches found. Please input chosen: ")
+            result = find_currency(final_code, currencies, False)
+            if result:
+                return result
+            else:
+                return None
+        else:
+            code, name = matches[0]
+            print(f"{name}, Code {code}")
+            return code
+
+    # -- If no match --
+    print("Currency not found")
+
+    if allow_retry:
+        while True:
+            retry = input("Try again? (y/n): ").lower()
+            if retry == "y":
+                new_input = input("Currency: ")
+                result = find_currency(new_input, currencies, False) # -- No Retry --
+                if result:
+                    return result
+            elif retry == "n":
+                return None

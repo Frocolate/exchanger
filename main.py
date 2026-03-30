@@ -1,126 +1,98 @@
 # Currency Converter - Converting currencies, getting accurate prices from scraping.
 
-currencies = [
-    ("AFGHANISTAN", "Afghani", "AFN"),
-    ("ALBANIA", "Lek", "ALL"),
-    ("ALGERIA", "Algerian Dinar", "DZD"),
-    ("AMERICAN SAMOA", "US Dollar", "USD"),
-    ("ANDORRA", "Euro", "EUR"),
-    ("ANGOLA", "Kwanza", "AOA"),
-    ("ANGUILLA", "East Caribbean Dollar", "XCD"),
-    ("ANTIGUA AND BARBUDA", "East Caribbean Dollar", "XCD"),
-    ("ARGENTINA", "Argentine Peso", "ARS"),
-    ("ARMENIA", "Armenian Dram", "AMD"),
-    ("ARUBA", "Aruban Florin", "AWG"),
-    ("AUSTRALIA", "Australian Dollar", "AUD"),
-    ("AUSTRIA", "Euro", "EUR"),
-    ("AZERBAIJAN", "Azerbaijanian Manat", "AZN"),
-    ("BAHAMAS", "Bahamian Dollar", "BSD"),
-    ("BAHRAIN", "Bahraini Dinar", "BHD"),
-    ("BANGLADESH", "Taka", "BDT"),
-    ("BARBADOS", "Barbados Dollar", "BBD"),
-    ("BELARUS", "Belarussian Ruble", "BYN"),
-    ("BELGIUM", "Euro", "EUR"),
-    ("BELIZE", "Belize Dollar", "BZD"),
-    ("BENIN", "CFA Franc BCEAO", "XOF"),
-    ("BERMUDA", "Bermudian Dollar", "BMD"),
-    ("BHUTAN", "Ngultrum", "BTN"),
-    ("BHUTAN", "Indian Rupee", "INR"),
-    ("BOLIVIA", "Boliviano", "BOB"),
-    ("BOLIVIA", "Mvdol", "BOV"),
-    ("BRAZIL", "Brazilian Real", "BRL"),
-    ("CANADA", "Canadian Dollar", "CAD"),
-    ("CHINA", "Yuan Renminbi", "CNY"),
-    ("CROATIA", "Euro", "EUR"),
-    ("CUBA", "Peso Convertible", "CUC"),
-    ("CUBA", "Cuban Peso", "CUP"),
-    ("CZECH REPUBLIC", "Czech Koruna", "CZK"),
-    ("DENMARK", "Danish Krone", "DKK"),
-    ("EGYPT", "Egyptian Pound", "EGP"),
-    ("FRANCE", "Euro", "EUR"),
-    ("GERMANY", "Euro", "EUR"),
-    ("GHANA", "Ghana Cedi", "GHS"),
-    ("GREECE", "Euro", "EUR"),
-    ("HONG KONG", "Hong Kong Dollar", "HKD"),
-    ("HUNGARY", "Forint", "HUF"),
-    ("ICELAND", "Iceland Krona", "ISK"),
-    ("INDIA", "Indian Rupee", "INR"),
-    ("INDONESIA", "Rupiah", "IDR"),
-    ("IRELAND", "Euro", "EUR"),
-    ("ISRAEL", "New Israeli Sheqel", "ILS"),
-    ("ITALY", "Euro", "EUR"),
-    ("JAPAN", "Yen", "JPY"),
-    ("KENYA", "Kenyan Shilling", "KES"),
-    ("MEXICO", "Mexican Peso", "MXN"),
-    ("NETHERLANDS", "Euro", "EUR"),
-    ("NEW ZEALAND", "New Zealand Dollar", "NZD"),
-    ("NIGERIA", "Naira", "NGN"),
-    ("NORWAY", "Norwegian Krone", "NOK"),
-    ("PAKISTAN", "Pakistan Rupee", "PKR"),
-    ("PHILIPPINES", "Philippine Peso", "PHP"),
-    ("POLAND", "Zloty", "PLN"),
-    ("PORTUGAL", "Euro", "EUR"),
-    ("QATAR", "Qatari Rial", "QAR"),
-    ("ROMANIA", "Romanian Leu", "RON"),
-    ("RUSSIAN FEDERATION", "Russian Ruble", "RUB"),
-    ("SAUDI ARABIA", "Saudi Riyal", "SAR"),
-    ("SINGAPORE", "Singapore Dollar", "SGD"),
-    ("SOUTH AFRICA", "Rand", "ZAR"),
-    ("SOUTH KOREA", "Won", "KRW"),
-    ("SPAIN", "Euro", "EUR"),
-    ("SRI LANKA", "Sri Lanka Rupee", "LKR"),
-    ("SWEDEN", "Swedish Krona", "SEK"),
-    ("SWITZERLAND", "Swiss Franc", "CHF"),
-    ("THAILAND", "Baht", "THB"),
-    ("TURKEY", "Turkish Lira", "TRY"),
-    ("UKRAINE", "Hryvnia", "UAH"),
-    ("UNITED ARAB EMIRATES", "UAE Dirham", "AED"),
-    ("UNITED KINGDOM", "Pound Sterling", "GBP"),
-    ("UNITED STATES", "US Dollar", "USD"),
-    ("VIET NAM", "Dong", "VND"),
-    ("ZAMBIA", "Zambian Kwacha", "ZMW"),
-    ("ZIMBABWE", "Zimbabwe Dollar", "ZWL"),
-]
+# -- Imports --
+import conversion
+from search import find_currency, get_currencies
+from datetime import datetime
 
-def findCountryByName(name):
-    return [c for c in currencies if name.lower() in c[0].lower()]
+def get_date():
+    while True:
+        user_input = input("Please enter date in form YYYY-MM-DD: ")
 
-import requests
-from bs4 import BeautifulSoup
+        try:
+            checked_date = datetime.strptime(user_input, "%Y-%m-%d")
+            if checked_date > datetime.now():
+                print("Date cannot be in the future.")
+                continue
+            return user_input
+        except ValueError:
+            print("Invalid date format. Please try again.")
 
-def convertURL(URL, Currency1, Currency2):
-    page = requests.get(URL)
-    soup = BeautifulSoup(page.content, "html.parser")
-    extracted = soup.find(class_='text-lg font-semibold text-xe-neutral-900 md:text-2xl')
-    extracted = str(extracted)
+def date_user_friendly(date):
+    months = [
+        "January", "February", "March", "April",
+        "May", "June", "July", "August",
+        "September", "October", "November", "December"]
+    day = date[8:]
+    month = date[:7]
+    month = month[5:]
+    month_int = int(month)
+    year = date[:4]
+    month_name = months[month_int - 1]
+    if (day == "11") or (day == "12") or (day == "13"):
+        day_suffix = "th"
+    elif (day[1] == "1"):
+        day_suffix = "st"
+    elif (day[1] == "2"):
+        day_suffix = "nd"
+    elif (day[1] == "3"):
+        day_suffix = "rd"
+    else:
+        day_suffix = "th"
+    if day[0] == "0":
+        day = day[1]
+
+    day = day + day_suffix
+    user_friendly_date = day + " of " + month_name + " " + year
+    return user_friendly_date
 
 
-    start = "=<!-- --> <!-- -->"
-    end = '<span class='
 
-    startParse = extracted.find(start)
-    endParse = extracted.find(end)
+date_user_friendly("2022-02-23")
+# -- Runs on file open --
+if __name__ == "__main__":
+    # -- Loop, whilst error checking input -- (Could have more error checking)
+    finished = False
+    currencies = get_currencies()
+    while not finished:
+        try:
+            # -- Searching and validating currency codes --
+            from_currency_search = input("Currency From: ")
+            #fromCurrency = search.findCountryByName(fromCurrencySearch, True)
+            from_currency = find_currency(from_currency_search, currencies)
 
-    endString = extracted[:(endParse)]
-    endString = endString[(startParse+18):]
-    print(f"1 {Currency1} = ~{endString} {Currency2}.")
+            to_currency_search = input("Currency To: ")
+            #toCurrency = search.findCountryByName(toCurrencySearch, True)
+            to_currency = find_currency(to_currency_search, currencies)
 
-finished = False
+            amount = float(input("Amount (Plain Number): "))
+            if amount <= 0:
+                raise ValueError("Amount must be positive.")
+            finished = True
+        except ValueError:
+            print("One or more invalid arguments.")
 
-baseURL = "https://www.xe.com/currencyconverter/convert/?Amount=1&From="
-currencyList = input("Type yes to find currencies.")
-while finished == False:
-    if (currencyList.lower()) == 'yes':
-        country = input("Input start / country name. ")
-        result = findCountryByName(country)
-        print(result)
-        cont = input("Another? (y/n) ")
-        if cont == "n": finished = True
+    # -- API Calls --
+    finished = False
+    while not finished:
+        try:
+            conversion_type = int(input("Please chose conversion type:\n1.Current\n2.Historic Value\n3.Rates Graph\n : "))
+        except ValueError:
+            print("invalid argument. ")
+        try:
+            if conversion_type == 1:
+                converted = conversion.convertNow(from_currency, to_currency, amount)
+                print(f"{amount} {from_currency} = {converted} {to_currency}")
+                finished = True
+            elif conversion_type == 2:
+                date = get_date()
+                user_friendly_date = date_user_friendly(date)
+                converted = conversion.historicConvert(from_currency, to_currency, amount, date)
+                print(f"{amount} {from_currency} was equal to ~{converted} {to_currency} on the {user_friendly_date}.")
+                finished = True
+            elif conversion_type == 3:
+                conversion.ratesOverTime(from_currency,to_currency, amount)
+                finished = True
 
-fromCurrency = input("Currency From: ")
-toCurrency = input("Currency To: ")
-
-URL = (baseURL + fromCurrency + "&To=" + toCurrency)
-
-convertURL(URL, fromCurrency, toCurrency)
-
+        except ValueError:
+            print("Please try again.")
