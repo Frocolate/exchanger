@@ -96,14 +96,4 @@ def find_currency(user_input, currencies, allow_retry = True):
 
     # -- If no match --
     print("Currency not found")
-
-    if allow_retry:
-        while True:
-            retry = input("Try again? (y/n): ").lower()
-            if retry == "y":
-                new_input = input("Currency: ")
-                result = find_currency(new_input, currencies, False) # -- No Retry --
-                if result:
-                    return result
-            elif retry == "n":
-                return None
+    return None

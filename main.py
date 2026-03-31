@@ -48,6 +48,15 @@ def date_user_friendly(old_date):
     user_friendly_date = day + " of " + month_name + " " + year
     return user_friendly_date
 
+def currency_search(from_or_to):
+    while True:
+        currency_input = input(f"Currency {from_or_to}: ")
+        currency_search = find_currency(currency_input, currencies)
+        if currency_search:
+            break
+        else:
+            print("Invalid Currency. Please try again.")
+    return currency_search
 
 # -- Runs on file open --
 if __name__ == "__main__":
@@ -57,15 +66,10 @@ if __name__ == "__main__":
     while not finished:
         try:
             # -- Searching and validating currency codes --
-            from_currency_search = input("Currency From: ")
-            #fromCurrency = search.findCountryByName(fromCurrencySearch, True)
-            from_currency = find_currency(from_currency_search, currencies)
-
-            to_currency_search = input("Currency To: ")
-            #toCurrency = search.findCountryByName(toCurrencySearch, True)
-            to_currency = find_currency(to_currency_search, currencies)
-
+            from_currency = currency_search("From")
+            to_currency = currency_search("To")
             amount = float(input("Amount (Plain Number): "))
+            
             if amount <= 0:
                 raise ValueError("Amount must be positive.")
             finished = True

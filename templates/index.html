@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Currency Converter</h1>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <input id="from_currency" type="text" name="from_currency" placeholder="From (e.g. GBP)">
+            <input id="to_currency" type="text" name="to_currency" placeholder="To (e.g. USD)">
+            <input name="amount" type="text" placeholder="Amount">
+            <button type="submit">Convert</button>
+        </form>
+    </div>
+
+    <div class="code-list">
+        <ul>
+            <li data-code="AUD">Australian Dollar (AUD)</li>
+            <li data-code="BRL">Brazilian Real (BRL)</li>
+            <li data-code="CAD">Canadian Dollar (CAD)</li>
+            <li data-code="CHF">Swiss Franc (CHF)</li>
+            <li data-code="CNY">Chinese Renminbi Yuan (CNY)</li>
+            <li data-code="CZK">Czech Koruna (CZK)</li>
+            <li data-code="DKK">Danish Krone (DKK)</li>
+            <li data-code="EUR">Euro (EUR)</li>
+            <li data-code="GBP">British Pound (GBP)</li>
+            <li data-code="HKD">Hong Kong Dollar (HKD)</li>
+            <li data-code="HUF">Hungarian Forint (HUF)</li>
+            <li data-code="IDR">Indonesian Rupiah (IDR)</li>
+            <li data-code="ILS">Israeli New Sheqel (ILS)</li>
+            <li data-code="INR">Indian Rupee (INR)</li>
+            <li data-code="ISK">Icelandic Króna (ISK)</li>
+            <li data-code="JPY">Japanese Yen (JPY)</li>
+            <li data-code="KRW">South Korean Won (KRW)</li>
+            <li data-code="MXN">Mexican Peso (MXN)</li>
+            <li data-code="MYR">Malaysian Ringgit (MYR)</li>
+            <li data-code="NOK">Norwegian Krone (NOK)</li>
+            <li data-code="NZD">New Zealand Dollar (NZD)</li>
+            <li data-code="PHP">Philippine Peso (PHP)</li>
+            <li data-code="PLN">Polish Złoty (PLN)</li>
+            <li data-code="RON">Romanian Leu (RON)</li>
+            <li data-code="SEK">Swedish Krona (SEK)</li>
+            <li data-code="SGD">Singapore Dollar (SGD)</li>
+            <li data-code="THB">Thai Baht (THB)</li>
+            <li data-code="TRY">Turkish Lira (TRY)</li>
+            <li data-code="USD">United States Dollar (USD)</li>
+            <li data-code="ZAR">South African Rand (ZAR)</li>
+        </ul>
+    </div>
+</body>
+</html>
+<script>
+    let selecting = "from"; // track which field to fill
+
+    const fromInput = document.getElementById("from_currency");
+    const toInput = document.getElementById("to_currency");
+
+    fromInput.addEventListener("focus", () => selecting = "from");
+    toInput.addEventListener("focus", () => selecting = "to");
+
+    document.querySelectorAll(".code-list li").forEach(item => {
+        item.addEventListener("click", () => {
+            const code = item.getAttribute("data-code");
+
+            if (selecting === "from") {
+                fromInput.value = code;
+            } else {
+                toInput.value = code;
+            }
+        });
+    });
+</script>
