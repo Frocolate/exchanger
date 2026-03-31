@@ -3,7 +3,14 @@ Currency Exchange Rate CLI Tool
 
 Python based CLI app for converting currencies using live exchange rates from Frankfurter API
 
-# V2.1 (Current)
+# V2.5 (Current)
+
+- CLI based & Webapp based
+- Tkinter
+- User Friendly
+
+
+# V2.1
 
 - Small bug fixes
 - Added graphing
@@ -27,6 +34,5 @@ Python based CLI app for converting currencies using live exchange rates from Fr
 
 # Next Version (V3.0)
 
-- GUI
-- Proper graphing
-- Further code cleanup
+- Better GUI
+- Full Suite
